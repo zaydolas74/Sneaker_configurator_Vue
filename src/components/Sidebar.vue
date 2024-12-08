@@ -19,9 +19,8 @@ const logout = () => {
   window.location.href = "/";
 };
 
-const currentPath = ref(window.location.pathname); // Track the current path
+const currentPath = ref(window.location.pathname);
 
-// Watch for route changes to update the currentPath
 router.afterEach((to) => {
   currentPath.value = to.path;
 });

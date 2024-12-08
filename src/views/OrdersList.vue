@@ -75,10 +75,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container mx-auto p-6">
+  <div class="container mx-auto px-4">
     <h1 class="text-4xl font-extrabold text-gray-800 mb-4">Orders Dashboard</h1>
     <p class="text-lg text-gray-600 mb-6">
-      You have
+      There are
       <span class="font-bold text-gray-800">{{ orders.length }}</span> orders.
     </p>
 
@@ -90,45 +90,103 @@ onMounted(() => {
       <div class="text-red-600 font-bold">{{ error }}</div>
     </div>
 
-    <div v-else>
-      <table
-        class="w-full border-collapse border border-gray-200 bg-white rounded-lg shadow-md"
-      >
-        <thead class="bg-gray-100">
-          <tr>
-            <th class="border border-gray-300 p-4 text-left">Customer Email</th>
-            <th class="border border-gray-300 p-4 text-left">Date</th>
-            <th class="border border-gray-300 p-4 text-left">Status</th>
-            <th class="border border-gray-300 p-4 text-left">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="order in orders"
-            :key="order.id"
-            class="hover:bg-gray-50 transition"
-          >
-            <td class="border border-gray-300 p-4">{{ order.email }}</td>
-            <td class="border border-gray-300 p-4">{{ order.date }}</td>
-            <td class="border border-gray-300 p-4">
-              <span :class="statusClass(order.status)">
-                {{ order.status }}
-              </span>
-            </td>
-            <td class="border border-gray-300 p-4">
-              <select
-                class="border rounded px-2 py-1 text-gray-700"
-                v-model="order.status"
-                @change="updateStatus(order._id, order.status)"
+    <div v-else class="relative overflow-hidden rounded-lg">
+      <!-- Responsive Scrollable Container -->
+      <div class="overflow-x-auto hidden lg:block">
+        <table class="min-w-full bg-white">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">
+                Customer Email
+              </th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">
+                Date
+              </th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">
+                Status
+              </th>
+              <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="order in orders"
+              :key="order.id"
+              class="hover:bg-gray-50 transition border-b border-gray-300"
+            >
+              <td class="px-6 py-4 text-sm text-gray-800">{{ order.email }}</td>
+              <td class="px-6 py-4 text-sm text-gray-800">{{ order.date }}</td>
+              <td class="px-6 py-4 text-sm capitalize">
+                <span :class="statusClass(order.status)">
+                  {{ order.status }}
+                </span>
+              </td>
+              <td
+                class="px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-evenly gap-2"
               >
-                <option value="Processing">Processing</option>
-                <option value="Send">Send</option>
-                <option value="Cancelled">Cancelled</option>
-              </select>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                <select
+                  class="border rounded px-2 py-1 text-gray-700 text-sm"
+                  v-model="order.status"
+                  @change="updateStatus(order._id, order.status)"
+                >
+                  <option value="Processing">Processing</option>
+                  <option value="Send">Send</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+                <button
+                  class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-sm"
+                  @click="deleteOrder(order._id)"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Mobile View -->
+
+      <div class="lg:hidden">
+        <div
+          v-for="order in orders"
+          :key="order.id"
+          class="border border-gray-300 bg-white shadow-md rounded-lg p-4 mb-4"
+        >
+          <div class="mb-2">
+            <span class="font-semibold text-gray-600">Email: </span>
+            <span class="text-gray-800">{{ order.email }}</span>
+          </div>
+          <div class="mb-2">
+            <span class="font-semibold text-gray-600">Date: </span>
+            <span class="text-gray-800">{{ order.date }}</span>
+          </div>
+          <div class="mb-2">
+            <span class="font-semibold text-gray-600">Status: </span>
+            <span :class="statusClass(order.status)">{{ order.status }}</span>
+          </div>
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-evenly gap-2"
+          >
+            <select
+              class="border rounded px-2 py-1 text-gray-700 text-sm"
+              v-model="order.status"
+              @change="updateStatus(order._id, order.status)"
+            >
+              <option value="Processing">Processing</option>
+              <option value="Send">Send</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+            <button
+              class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-sm"
+              @click="deleteOrder(order._id)"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
