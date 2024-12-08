@@ -33,8 +33,9 @@ const handleChangePassword = async () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
-          currentPassword: currentPassword.value,
+          oldPassword: oldPassword.value,
           newPassword: newPassword.value,
+          confirmPassword: newPassword.value,
         }),
       }
     );
@@ -42,7 +43,7 @@ const handleChangePassword = async () => {
     const data = await response.json();
     if (data.status === "success") {
       success.value = "Password changed successfully";
-      currentPassword.value = "";
+      oldPassword.value = "";
       newPassword.value = "";
       confirmPassword.value = "";
     } else {
